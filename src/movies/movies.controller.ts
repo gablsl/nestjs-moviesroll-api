@@ -8,18 +8,25 @@ import {
   Delete,
   HttpStatus,
   HttpCode,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('api/v1/movies')
 export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
 
   @Post()
-  create(@Body() createMovieDto: CreateMovieDto) {
-    return this.moviesService.create(createMovieDto);
+  @UseInterceptors(FileInterceptor('imgUrl'))
+  create(
+    @Body() createMovieDto: CreateMovieDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.moviesService.create(createMovieDto, file);
   }
 
   @Get()

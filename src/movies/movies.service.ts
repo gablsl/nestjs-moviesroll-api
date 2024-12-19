@@ -4,12 +4,16 @@ import { UpdateMovieDto } from './dto/update-movie.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { NotFoundError } from 'src/common/errors/not-found.error';
 import { AlreadyExistsError } from 'src/common/errors/already-exists.error';
+import { S3Service } from 'src/aws/s3/s3.service';
 
 @Injectable()
 export class MoviesService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly s3Service: S3Service,
+  ) {}
 
-  async create(createMovieDto: CreateMovieDto) {
+  async create(createMovieDto: CreateMovieDto, file: Express.Multer.File) {
     const movie = await this.prismaService.movie.findFirst({
       where: {
         name: createMovieDto.name,
@@ -20,9 +24,32 @@ export class MoviesService {
       throw new AlreadyExistsError('Movie');
     }
 
+    if (!file) {
+      throw new Error('File is undefined');
+    }
+
+    const imgUrl = await this.s3Service.uploadFile(file);
+
     return await this.prismaService.movie.create({
       data: {
-        ...createMovieDto,
+        imgUrl,
+        name: createMovieDto.name,
+        synopsis: createMovieDto.synopsis,
+        episodes: Number(createMovieDto.episodes),
+        year: Number(createMovieDto.year),
+        genres: {
+          set: Array.isArray(createMovieDto.genres)
+            ? createMovieDto.genres
+            : [createMovieDto.genres],
+        },
+        director: createMovieDto.director,
+        cast: {
+          set: Array.isArray(createMovieDto.cast)
+            ? createMovieDto.cast
+            : [createMovieDto.cast],
+        },
+        type: createMovieDto.type,
+        slug: createMovieDto.slug,
       },
     });
   }
