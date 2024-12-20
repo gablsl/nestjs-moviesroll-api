@@ -7,6 +7,7 @@ import { MoviesModule } from './movies/movies.module';
 import { ConfigModule } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
 import { S3Service } from './aws/s3/s3.service';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { S3Service } from './aws/s3/s3.service';
     MoviesModule,
     ConfigModule.forRoot(),
     MulterModule.register({}),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, S3Service],
