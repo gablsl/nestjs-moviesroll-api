@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { CreateMovieDto } from './dto/create-movie.dto';
-import { UpdateMovieDto } from './dto/update-movie.dto';
+import { CreateMovieDto } from './dto/admin-create-movie.dto';
+import { UpdateMovieDto } from './dto/admin-update-movie.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { NotFoundError } from 'src/common/errors/not-found.error';
 import { AlreadyExistsError } from 'src/common/errors/already-exists.error';
 import { S3Service } from 'src/aws/s3/s3.service';
 
 @Injectable()
-export class MoviesService {
+export class AdminMoviesService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly s3Service: S3Service,
