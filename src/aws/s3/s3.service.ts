@@ -28,6 +28,19 @@ export class S3Service {
     return s3Response.Location;
   }
 
+  async deleteFile(filePath: string, bucketName: string) {
+    const params = {
+      Bucket: bucketName,
+      Key: filePath,
+    };
+
+    try {
+      await this.s3.deleteObject(params).promise();
+    } catch (error) {
+      throw new Error('Error deleting file');
+    }
+  }
+
   async s3_upload(
     file: Buffer,
     bucket: string,
@@ -50,7 +63,6 @@ export class S3Service {
       const s3Response = await this.s3.upload(params).promise();
       return s3Response;
     } catch (error) {
-      console.log(error);
       throw new Error('Error uploading file to S3');
     }
   }
