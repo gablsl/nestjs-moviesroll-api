@@ -28,7 +28,10 @@ export class MoviesService {
       throw new Error('File is undefined');
     }
 
-    const imgUrl = await this.s3Service.uploadFile(file);
+    const imgUrl = await this.s3Service.uploadFile(
+      file,
+      process.env.AWS_MOVIES_BUCKET_NAME,
+    );
 
     return await this.prismaService.movie.create({
       data: {

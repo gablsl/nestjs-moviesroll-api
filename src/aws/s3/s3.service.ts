@@ -5,13 +5,15 @@ import * as fs from 'fs';
 
 @Injectable()
 export class S3Service {
-  AWS_S3_BUCKET = process.env.AWS_BUCKET_NAME;
   s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   });
 
-  async uploadFile(file: Express.Multer.File): Promise<string> {
+  async uploadFile(
+    file: Express.Multer.File,
+    bucketName: string,
+  ): Promise<string> {
     const { originalname, mimetype, path } = file;
 
     const randomName = this.generateRandomFileName(originalname);
@@ -19,7 +21,7 @@ export class S3Service {
 
     const s3Response = await this.s3_upload(
       fileBuffer,
-      this.AWS_S3_BUCKET,
+      bucketName,
       randomName,
       mimetype,
     );
