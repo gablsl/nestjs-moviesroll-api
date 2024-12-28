@@ -1,4 +1,4 @@
-# 🧿 Auth API
+# 🍿 Movies API
 
 > Something will be write here
 
@@ -10,9 +10,9 @@
 
 1. Clone the repository
 
-   ```bash
-     git clone https://github.com/gablsl/nestjs-moviesroll-api.git
-   ```
+```bash
+   git clone https://github.com/gablsl/nestjs-moviesroll-api.git
+```
 
 2. Run docker up command
 
